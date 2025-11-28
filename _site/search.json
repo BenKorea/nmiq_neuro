@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안",
+    "section": "",
+    "text": "한국의 노령화사회가 초고속으로 진행되면서 뇌신경 퇴행성질환의 중요성이 더욱 증가하고 있다. 이러한 맥락에서 뇌 도파민수송체 영상과 뇌 베타아밀로이드 PET 진단영상검사도 증가하고 있다. 방사선을 사용하는 영상검사들은 방사선안전관리측면에서는 선량관리를 주목하지만 ICRP의 권고에서와 같이 반드시 영상품질을 동시에 고려해야 한다.\n영상검사의 선량정보를 추출 및 활용은 PACS 회사에서 개발한 앱을 사용할 수 있지만 고가이고 전국적인 조사에는 무리가 있다. 따라서 무료로 사용할 수 있는 오픈소스가 필요하다. 그리고 영상품질을 고려하여기 위해서도 이를 자동으로 평가하는 기능도 필요하다.\n본 고찰에서는 오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안을 Brain PET 영상품질평가(QC)를 중심으로 논의하고자 한다."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "index.html#서론",
+    "href": "index.html#서론",
+    "title": "오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안",
+    "section": "",
+    "text": "한국의 노령화사회가 초고속으로 진행되면서 뇌신경 퇴행성질환의 중요성이 더욱 증가하고 있다. 이러한 맥락에서 뇌 도파민수송체 영상과 뇌 베타아밀로이드 PET 진단영상검사도 증가하고 있다. 방사선을 사용하는 영상검사들은 방사선안전관리측면에서는 선량관리를 주목하지만 ICRP의 권고에서와 같이 반드시 영상품질을 동시에 고려해야 한다.\n영상검사의 선량정보를 추출 및 활용은 PACS 회사에서 개발한 앱을 사용할 수 있지만 고가이고 전국적인 조사에는 무리가 있다. 따라서 무료로 사용할 수 있는 오픈소스가 필요하다. 그리고 영상품질을 고려하여기 위해서도 이를 자동으로 평가하는 기능도 필요하다.\n본 고찰에서는 오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안을 Brain PET 영상품질평가(QC)를 중심으로 논의하고자 한다."
+  },
+  {
+    "objectID": "index.html#brain-pet-영상의-영상품질평가의-요소",
+    "href": "index.html#brain-pet-영상의-영상품질평가의-요소",
+    "title": "오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안",
+    "section": "Brain PET 영상의 영상품질평가의 요소",
+    "text": "Brain PET 영상의 영상품질평가의 요소\n영상품질은 평가하기 위해서는 일반적으로 배경영역 및 불변적인 섭취 영역, 그리고 두 영역의 대비도(Contrast)를 평가하는 것이 중요하다. Brain PET 영상의 경우 다음과 같은 요소들이 영상품질평가에 중요하다.\n아밀로이드 brain PET을 기준으로 영상품질평가가 가능한 관심영역들은 아래와 같다. cerebellar graymatter cerebellar white matter pons ventricle centrum ovale\n소뇌회백질은 참조영역이며, 소뇌백질은 잡음평가에 사용될 수 있다. Pons는 뇌간의 일부로서 안정적인 섭취를 보이며, 뇌실과 저섭취 영역으로서 대비도 평가에 사용될 수 있다. centrum ovale는 양성섭취영역으로 대비도 평가에 사용된다.\nNoise·SNR·CNR 계산"
+  },
+  {
+    "objectID": "index.html#영상품질평가-자동화",
+    "href": "index.html#영상품질평가-자동화",
+    "title": "오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안",
+    "section": "영상품질평가 자동화",
+    "text": "영상품질평가 자동화\n전국단위의 조사에 사용되는 영상품질평가는 지표로서의 정확성도 필요하지만, 무엇보다도 대규모 조사를 수행할 수 있는 자동화된 시스템이 필요하다. 그러한 관점에서 PET 영상에 매뉴얼로 관심영역을 설정하는 방식은 현실적이지 않다.\n문헌을 고찰해 보면 매뉴얼이 아닌 자동화가 가능한 방법 중 정확도가 가장 높은 방법은 3D MRI에 PET 영상을 정합하고, 관심영역을 파싱하는 방식이다. 이러한 방식은 아밀로이드 섭취 정량화에 사용되는 방법인데 이 방법은 그대로 영상품질 평가에 활용이 가능하다. 단지 관심영역 설정을 위에서 언급된 영역으로 하면 된다.\n3D MRI를 정합하는 오픈소스는 정통적으로는 SPM이 먼저 있었고, 다음 세대는 FSL이 이용되기 시작했다. 가장 최근에는 deep learning 기반의 정합 방법들이 개발되어 사용되고 있다. 위의 방법들은 오픈소스로 제공되고 있다. 한 가지 주의할 점을 오픈 소스로 된 정합 툴들을 자동화하기 위해서는 파이썬등으로 조작할 수 있는 인터페이스가 제공되어야 한다.\nSPM 링크: FSL 링크:"
+  },
+  {
+    "objectID": "index.html#deep-learning-기반의-brain-segmentation-오픈소소",
+    "href": "index.html#deep-learning-기반의-brain-segmentation-오픈소소",
+    "title": "오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안",
+    "section": "deep learning 기반의 brain segmentation 오픈소소",
+    "text": "deep learning 기반의 brain segmentation 오픈소소\n\nFastSurfer\n링크: https://github.com/Deep-MI/FastSurfer FastSurfer는 FreeSurfer와 유사한 수준의 뇌 구조 segmentation을 매우 빠르게 수행하는 딥러닝 기반의 오픈소스 툴이다. FastSurfer는 3D MRI 데이터를 입력으로 받아 다양한 뇌 구조를 자동으로 분할하며, 처리 속도가 매우 빠르다. 이 툴은 Python 인터페이스를 제공하여 자동화된 파이프라인에 쉽게 통합할 수 있다.\nReferences\nHenschel L, Conjeti S, Estrada S, Diers K, Fischl B, Reuter M, FastSurfer - A fast and accurate deep learning based neuroimaging pipeline, NeuroImage 219 (2020), 117012. https://doi.org/10.1016/j.neuroimage.2020.117012\nHenschel L, Kuegler D, Reuter M. (*co-first). FastSurferVINN: Building Resolution-Independence into Deep Learning Segmentation Methods - A Solution for HighRes Brain MRI. NeuroImage 251 (2022), 118933. http://dx.doi.org/10.1016/j.neuroimage.2022.118933\nFaber J, Kuegler D, Bahrami E, et al. (co-first). CerebNet: A fast and reliable deep-learning pipeline for detailed cerebellum sub-segmentation. NeuroImage 264 (2022), 119703. https://doi.org/10.1016/j.neuroimage.2022.119703\nEstrada S, Kuegler D, Bahrami E, Xu P, Mousa D, Breteler MMB, Aziz NA, Reuter M. FastSurfer-HypVINN: Automated sub-segmentation of the hypothalamus and adjacent structures on high-resolutional brain MRI. Imaging Neuroscience 2023; 1 1–32. https://doi.org/10.1162/imag_a_00034\n\n\nSynthSeg\n(스캐너·해상도 무관한 강력 segmentation — 다기관 PET 연구 최적)\nGitHub: https://github.com/BBillot/SynthSeg\n특징\n다양한 해상도·노이즈·스캐너 차이에 매우 강건한 segmentation\nFully DL 기반 multi-site robust 모델\n속도: 약 1분\nBrain PET 연구 적합성\nAmyloid PET 다기관 연구에서 가장 유리\n1mm T1 없어도 segmentation 가능 → PET/MR 혼용 연구에 특히 유리\n\n\nSLANT (Spatially Localized Atlas Network Tiles)\nhttps://vitalab.github.io/article/2019/04/04/SLANTWholeBrainSegmnetaion.html\n특징\n3D U-Net 기반 대규모 atlas segmentation\nMRI segmentation 정확도가 매우 높으며 clinical-grade 수준\nPET inverse-warp에 적합한 고정밀 segmentation 제공\nBrain PET 연구 적합성\nAmyloid PET, Tau PET, FDG PET 모두 ROI mapping에 적합\n\n\nHD-BET (Brain Extraction Deep Learning)\nGitHub: https://github.com/deep-mi/HD-BET\n특징\nworld-level brain extraction(BET) 모델\nMRI skull stripping을 자동화하여 PET/MRI registration 품질 향상\n대부분 segmentation 파이프라인의 첫 단계\nBrain PET 연구 적합성\nPET skull stripping 개선\n정합 품질 및 ROI 경계 선명도 개선\n\n\n\n\n\n\n\n\n\n\n\n모델\n속도\n정확도\n다기관 강건성\nPET/MR 연구 적합성\n비고\n\n\n\n\nFastSurfer\n★★★★☆\n★★★★★\n★★★★☆\n최적\nFreeSurfer 대체\n\n\nSynthSeg\n★★★★★\n★★★★☆\n★★★★★\n최적\nmulti-scanner 강건\n\n\nSLANT\n★★★☆☆\n★★★★★\n★★★★☆\n최적\n대규모 atlas\n\n\nHD-BET\n★★★★☆\n–\n–\n필수 보조\nskull stripping\n\n\nQuickNAT\n★★★★★\n★★★★☆\n★★★☆☆\n적합\n초고속\n\n\nDeepSCAN\n★★★☆☆\n★★★★★\n★★★☆☆\n적합\nsubcortical 강함\n\n\nMONAI Label\n★★★★☆\n★★★★★\n★★★★★\n최적\n확장성 최고\n\n\nDeepBrain\n★★★☆☆\n★★★☆☆\n★★★☆☆\n보조\nlightweight\n\n\n\n따라서 다기관으로 MRI 기반의 Brain PET 영상분석을 위해서는 FastSurfer 또는 SynthSeg가 추천된다."
+  },
+  {
+    "objectID": "index.html#연구용-pacs",
+    "href": "index.html#연구용-pacs",
+    "title": "오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안",
+    "section": "연구용 PACS",
+    "text": "연구용 PACS\nMRI와 PET 영상을 clinical PACS로 부터 추출하고, 필요시에는 영상도 확인할 수 있는 연구용 PACS 시스템도 영상품질평가에 필요하다. 아래와 같은 오픈소스들이 제공되고 있다.\nOrthanc (세계적으로 가장 널리 쓰이는 연구용 오픈소스 PACS/VNA) URL: https://www.orthanc-server.com 핵심 장점 • 완전한 DICOM PACS • PET, CT, MRI 모두 지원 • REST API + Python API + C++ API • 서버에서 자동으로 DICOM 다운로드 가능 (orthanc-python) • “Orthanc for Research” 생태계가 매우 활성화 • 병원 PACS와 정상적으로 DICOM 라우팅 가능 • Docker 이미지 안정적 • 클러스터링/플러그인 생태계 풍부 PET/MRI 연구에 매우 적합 • PET-CT, PET-MR 모두 무리 없이 저장 및 검색 • 연구용 3D MRI-T1 수집 및 자동 다운로드 • metadata 기반 자동 routing (예: PET 받은 뒤 해당 환자의 T1 MRI 자동 수집) Python 연동 예 import requests\nr = requests.get(“http://localhost:8042/tools/find”, json={ “Level”: “Study”, “Query”: {“PatientID”: “12345”} }) 실제 활용 분야 • PET/CT 자동 수집 • Amyloid PET + T1 MRI paired dataset 생성 • PET/MR 정합 연구 • AI segmentation pipeline 연결 선생님 프로젝트(NMIQ/AI4INFRA)와 가장 잘 맞는 1순위 오픈소스 PACS입니다. ________________________________________ ✔ 2. DCM4CHEE (full-scale enterprise PACS, 연구에도 활용 가능) URL: https://www.dcm4che.org/ 장점 • 세계적으로 가장 많이 배포된 오픈소스 PACS • 확장성·성능·호환성이 매우 높음 • Docker 기반 dcm4chee-arc-light가 안정적으로 유지됨 • Worklist, HL7, MPPS 등 병원 PACS 기능 거의 전부 제공 • PET/CT, PET/MR 포함 DICOM modality 완전 지원 연구 관점 장점 • WADO/REST API 통해 PET/MRI 다운로드 자동화 가능 • 기존 병원 PACS(DR/CT/MR)와 router 기능 제공 • XNAT, Orthanc과 연동하는 병원도 많음 단점 • Orthanc보다 설정이 복잡 • 연구자가 단독으로 설치하기는 부담 (그러나 Docker 이용 시 매우 간편해졌음) ________________________________________ ✔ 3. XNAT (연구용 이미지 데이터베이스 / PACS 아닌 연구 플랫폼) URL: https://www.xnat.org/ 성격 • PACS라기보다는 연구용 PET/MR 단위의 대규모 이미지 저장 + annotation + 메타데이터 관리 시스템 • DICOM 업로드/다운로드 완전 지원 • PET/MR 연구에서 가장 널리 쓰이는 데이터 관리 플랫폼 장점 • Web uploader, DICOM listener(수신 서버), 대용량 스토리지 지원 • PET-CT, PET-MR, MRI T1 수집에 매우 강함 • 분석 pipeline 자동 실행 (Docker + batch job) • BIDS 변환 가능 (BIDS 모듈) • 연구자 UI가 매우 편함 단점 • 병원 PACS처럼 즉시 clinical-grade routing 기능은 약함 • PACS 치고는 느림 • 그러나 PET/MR 연구 데이터 관리에서는 최강 ________________________________________ ✔ 4. Conquest DICOM Server (가벼운 오픈소스 PACS) URL: https://ingenium.home.xs4all.nl/dicom.html 장점 • 매우 가벼운 PACS • Windows·Linux 모두 가능 • 연구실 내부에서 PET/MR를 임시로 모으는 용도로 적합 PET/MRI 수집 가능 • PET/CT DICOM 완전 지원 • MRI(T1/T2/3D)도 완전 지원 • Lua 스크립트로 자동 다운로드/라우팅 가능 단점 • Orthanc/DCM4CHEE보다 기능이 제한적 • 연구 대규모 구축보다는 소규모 연구용에 적합 ________________________________________ ✔ 5. Weasis + dcm4chee 조합 (연구용 뷰어 + PACS) URL: https://weasis.org • dcm4chee를 PACS로 설치하고 • Weasis로 PET/MR를 연구자가 다운로드하는 형태 • AI4INFRA처럼 연구자용 PACS 구축 시 많이 채택됨 ________________________________________ ✔ 6. OHIF Viewer + Orthanc 조합 (Web-based 연구 플랫폼) • PACS = Orthanc • Viewer = OHIF (open-source web PACS viewer) • PET/MR를 웹 브라우저에서 실시간 확인+다운로드 • BIDS exporter 추가 가능 이 조합은 AI 연구와 PACS 연구를 동시에 하고 싶은 경우 가장 실용적. ________________________________________ ✔ 7. PET/MR 특화 연구용 서버(비공식) 일부 연구 그룹에서 PET/MR 연구를 위해 아래 조합을 사용함: 1. Orthanc + plugin (segmentation, JSON metadata export) 2. XNAT + DICOM listener 3. dcm4chee → Orthanc routing 이 중 대부분은 오픈소스를 기반으로 구성 가능. ________________________________________ ✔ 결론: Amyloid PET + 3D MRI 수집에 성공적으로 사용 가능한 오픈소스 PACS 시스템 PET MRI 3D API 자동화 연구친화성 비고 Orthanc ⭐⭐⭐⭐⭐ ⭐⭐⭐⭐⭐ ⭐⭐⭐⭐⭐ ⭐⭐⭐⭐⭐ 연구 최강 DCM4CHEE ⭐⭐⭐⭐⭐ ⭐⭐⭐⭐⭐ ⭐⭐⭐⭐ ⭐⭐⭐⭐ enterprise 수준 XNAT ⭐⭐⭐⭐ ⭐⭐⭐⭐ ⭐⭐⭐⭐⭐ ⭐⭐⭐⭐⭐ 연구 데이터 플랫폼"
+  }
+]
