@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-12-01">
+
+<title>오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안 – nmiq_neuro</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-d59433dcf065b441e7cfda934b98f60e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">nmiq_neuro</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#서론" id="toc-서론" class="nav-link active" data-scroll-target="#서론"><span class="header-section-number">1</span> 서론</a></li>
+  <li><a href="#brain-pet-관심영역-설정" id="toc-brain-pet-관심영역-설정" class="nav-link" data-scroll-target="#brain-pet-관심영역-설정"><span class="header-section-number">2</span> Brain PET 관심영역 설정</a></li>
+  <li><a href="#brain-pet-관심영역-자동추출" id="toc-brain-pet-관심영역-자동추출" class="nav-link" data-scroll-target="#brain-pet-관심영역-자동추출"><span class="header-section-number">3</span> Brain PET 관심영역 자동추출</a>
+  <ul class="collapse">
+  <li><a href="#spm" id="toc-spm" class="nav-link" data-scroll-target="#spm"><span class="header-section-number">3.1</span> SPM</a></li>
+  <li><a href="#freesurfer" id="toc-freesurfer" class="nav-link" data-scroll-target="#freesurfer"><span class="header-section-number">3.2</span> FreeSurfer</a></li>
+  <li><a href="#fastsurfer" id="toc-fastsurfer" class="nav-link" data-scroll-target="#fastsurfer"><span class="header-section-number">3.3</span> FastSurfer</a></li>
+  <li><a href="#synthseg" id="toc-synthseg" class="nav-link" data-scroll-target="#synthseg"><span class="header-section-number">3.4</span> SynthSeg</a></li>
+  <li><a href="#기타모델" id="toc-기타모델" class="nav-link" data-scroll-target="#기타모델"><span class="header-section-number">3.5</span> 기타모델</a></li>
+  </ul></li>
+  <li><a href="#dicom-server" id="toc-dicom-server" class="nav-link" data-scroll-target="#dicom-server"><span class="header-section-number">4</span> DICOM Server</a>
+  <ul class="collapse">
+  <li><a href="#orthanc" id="toc-orthanc" class="nav-link" data-scroll-target="#orthanc"><span class="header-section-number">4.1</span> Orthanc</a></li>
+  <li><a href="#dcm4chee" id="toc-dcm4chee" class="nav-link" data-scroll-target="#dcm4chee"><span class="header-section-number">4.2</span> DCM4CHEE</a></li>
+  <li><a href="#conquest-dicom-server" id="toc-conquest-dicom-server" class="nav-link" data-scroll-target="#conquest-dicom-server"><span class="header-section-number">4.3</span> Conquest DICOM Server</a></li>
+  <li><a href="#dicoogle" id="toc-dicoogle" class="nav-link" data-scroll-target="#dicoogle"><span class="header-section-number">4.4</span> Dicoogle</a></li>
+  <li><a href="#비교-요약" id="toc-비교-요약" class="nav-link" data-scroll-target="#비교-요약"><span class="header-section-number">4.5</span> 비교 요약</a></li>
+  </ul></li>
+  <li><a href="#dicom-선량정보-추출을-위한-오픈소스" id="toc-dicom-선량정보-추출을-위한-오픈소스" class="nav-link" data-scroll-target="#dicom-선량정보-추출을-위한-오픈소스"><span class="header-section-number">5</span> DICOM 선량정보 추출을 위한 오픈소스</a>
+  <ul class="collapse">
+  <li><a href="#doseutility" id="toc-doseutility" class="nav-link" data-scroll-target="#doseutility"><span class="header-section-number">5.1</span> DoseUtility</a></li>
+  <li><a href="#openrem" id="toc-openrem" class="nav-link" data-scroll-target="#openrem"><span class="header-section-number">5.2</span> OpenREM</a>
+  <ul class="collapse">
+  <li><a href="#자체-개발을-통한-dicom-기반-선량-정보-추출" id="toc-자체-개발을-통한-dicom-기반-선량-정보-추출" class="nav-link" data-scroll-target="#자체-개발을-통한-dicom-기반-선량-정보-추출"><span class="header-section-number">5.2.1</span> 자체 개발을 통한 DICOM 기반 선량 정보 추출</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#가명화pseudonymization의-필요성과-형태보존-암호화-기반-구현" id="toc-가명화pseudonymization의-필요성과-형태보존-암호화-기반-구현" class="nav-link" data-scroll-target="#가명화pseudonymization의-필요성과-형태보존-암호화-기반-구현"><span class="header-section-number">6</span> 가명화(Pseudonymization)의 필요성과 형태보존 암호화 기반 구현</a></li>
+  <li><a href="#의료영상-데이터-보호를-위한-인프라-구성-전략" id="toc-의료영상-데이터-보호를-위한-인프라-구성-전략" class="nav-link" data-scroll-target="#의료영상-데이터-보호를-위한-인프라-구성-전략"><span class="header-section-number">7</span> 의료영상 데이터 보호를 위한 인프라 구성 전략</a>
+  <ul class="collapse">
+  <li><a href="#vault-hashicorp-vault" id="toc-vault-hashicorp-vault" class="nav-link" data-scroll-target="#vault-hashicorp-vault"><span class="header-section-number">7.1</span> Vault (HashiCorp Vault)</a></li>
+  <li><a href="#bitwarden-self-hosted" id="toc-bitwarden-self-hosted" class="nav-link" data-scroll-target="#bitwarden-self-hosted"><span class="header-section-number">7.2</span> Bitwarden (Self-hosted)</a></li>
+  <li><a href="#postgresql" id="toc-postgresql" class="nav-link" data-scroll-target="#postgresql"><span class="header-section-number">7.3</span> PostgreSQL</a></li>
+  <li><a href="#elk-stack-elasticsearch-logstash-kibana" id="toc-elk-stack-elasticsearch-logstash-kibana" class="nav-link" data-scroll-target="#elk-stack-elasticsearch-logstash-kibana"><span class="header-section-number">7.4</span> ELK Stack (Elasticsearch, Logstash, Kibana)</a></li>
+  <li><a href="#keycloak" id="toc-keycloak" class="nav-link" data-scroll-target="#keycloak"><span class="header-section-number">7.5</span> Keycloak</a></li>
+  <li><a href="#ldap-openldap" id="toc-ldap-openldap" class="nav-link" data-scroll-target="#ldap-openldap"><span class="header-section-number">7.6</span> LDAP (OpenLDAP)</a></li>
+  </ul></li>
+  <li><a href="#활용방안" id="toc-활용방안" class="nav-link" data-scroll-target="#활용방안"><span class="header-section-number">8</span> 활용방안</a>
+  <ul class="collapse">
+  <li><a href="#프로토콜-기반의-영상-품질-및-선량-평가" id="toc-프로토콜-기반의-영상-품질-및-선량-평가" class="nav-link" data-scroll-target="#프로토콜-기반의-영상-품질-및-선량-평가"><span class="header-section-number">8.1</span> 프로토콜 기반의 영상 품질 및 선량 평가</a></li>
+  <li><a href="#핵의학-검사-통계-체계의-자동화" id="toc-핵의학-검사-통계-체계의-자동화" class="nav-link" data-scroll-target="#핵의학-검사-통계-체계의-자동화"><span class="header-section-number">8.2</span> 핵의학 검사 통계 체계의 자동화</a></li>
+  <li><a href="#핵의학-분야-국가-drl-조사사업-지원" id="toc-핵의학-분야-국가-drl-조사사업-지원" class="nav-link" data-scroll-target="#핵의학-분야-국가-drl-조사사업-지원"><span class="header-section-number">8.3</span> 핵의학 분야 국가 DRL 조사사업 지원</a></li>
+  <li><a href="#인공지능-학습-인프라로서의-확장성" id="toc-인공지능-학습-인프라로서의-확장성" class="nav-link" data-scroll-target="#인공지능-학습-인프라로서의-확장성"><span class="header-section-number">8.4</span> 인공지능 학습 인프라로서의 확장성</a></li>
+  </ul></li>
+  <li><a href="#맺음말" id="toc-맺음말" class="nav-link" data-scroll-target="#맺음말"><span class="header-section-number">9</span> 맺음말</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안</h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">(BenKorea) Byung Il Kim </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Department of Nuclear Medicine, Korea Cancer Center Hospital, Korea Institute of Radiological and Medical Sciences
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 1, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="서론" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> 서론</h1>
+<p>한국 사회의 고령화는 뇌신경 퇴행성 질환의 유병률을 빠르게 증가시키고 있으며, 이에 따라 뇌 도파민수송체 영상 및 뇌 베타아밀로이드 PET 검사의 임상적 활용도 또한 크게 확대되고 있다. 이러한 검사들은 방사선을 사용하기에 전문학회에서는 환자들에게 정당하게 사용되도록 노력하면서도 영상의 품질과 방사선량을 최적화를 위해 노력해야 한다. 국제방사선방호위원회(ICRP, International Committee on Radiological Protection)도 <strong>선량(dose)</strong>과 함께 <strong>영상품질(image quality, IQ)</strong>을 반드시 함께 고려해야 한다고 권고하고 있다.</p>
+<p>영상검사의 선량을 관리하기 위해서는 일부 병원에서는 이미 상용화된 선량관리 프로그램을 사용해오고 있었다. 하지만 이러한 방식은 전국 규모의 조사에는 적합하지 않을 뿐더러 고비용이고 원하는방식으로 수정하기도 어렵다. 그리고 영상품질에 대한 기능은 전무하기 때문에 영상품질평가는 수작업으로 해야 하는 매우 큰 제약이 있어 왔다.</p>
+<p>저자는 위 제한점을 극복하기 위해 오픈소스 기반의 Neuroimaging 영상품질∙선량 평가 시스템의 구축을 진행하고 있다. 이 고찰에서는 amyloid Brain PET QC를 중심으로 오픈소스를 이용한 Neuroimaging 영상품질∙선량 평가시스템의 구축과 활용 방안을 논의하고자 한다.</p>
+</section>
+<section id="brain-pet-관심영역-설정" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Brain PET 관심영역 설정</h1>
+<p>Salvadori 등은 FDG brain PET의 영상품질을 평가하기 위해 <a href="#fig-voi" class="quarto-xref">Figure&nbsp;1</a> 과 같이 관심영역을 설정한 후 contrast와 noise, sharpness를 측정하였다 <span class="citation" data-cites="salvadori2019">[<a href="#ref-salvadori2019" role="doc-biblioref">1</a>]</span>. 이는 FDG의 경우 정상섭취를 보이는 참조영역으로 striata및 occiput이 해당하며, 섭취가 없는 참조영역으로는 semi-oval center가 사용될 수 있음을 시사한다.</p>
+<div id="fig-voi" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-voi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="https://link.springer.com/article/10.1186/s13550-019-0526-5/figures/2"><img src="images/clipboard-1611053654.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-voi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Schematic representations of methods used on axial 18F-FDG brain PET images to a quantify the contrast between central (striata) or peripheral (occiput) gray-matter structures and a white matter structure (semi-oval center), b determine the sharpness index through the maximal slope of count profiles obtained perpendicularly to the gray/white-matter interfaces of striata and occiput and further normalized to the maximal curve value, and c quantify the noise level within the semi-oval area
+</figcaption>
+</figure>
+</div>
+<p>아밀로이드 영상의 참조영역에 대한 연구결과들을 일부 상충되기도 하지만 몇 개의 영역으로 요약할 수 있다. Heeman 등은 C-11 PiB 사용하였을 때 cerebellar graymatter, whole cerebellum, white matter brain stem/pons, whole brain stem, subcortical white matter 들을 비교했을 때 cerebellar gray matter와 whole cerebellum이 참조영역으로 더 적합하다고 하였다 <span class="citation" data-cites="heeman2020">[<a href="#ref-heeman2020" role="doc-biblioref">2</a>]</span>. Chiao 등은 whole cerebellum, cerebellar gray matter, cerebellar white matter, pons, and subcortical white matter&nbsp;들을 비교했을 때, SUVR을 이용한 치료효과판정에는 차이가 없었다고 하였다 <span class="citation" data-cites="chiao2019">[<a href="#ref-chiao2019" role="doc-biblioref">3</a>]</span>. 특히 이들의 연구는 관심영역을 설정할 때 3D MRI template를 사용하고 atlas based segmentation을 사용하기에 자동화로 진행할 수 있음을 시시한다.</p>
+<p>이러한 연구들은 참고하여 진행하고자 하는 프로젝트에서는 배경섭취를 평가하는 목적으로 ventricle을 추가하여</p>
+<ul>
+<li>cerebellar gray matter</li>
+<li>cerebellar white matter</li>
+<li>pons</li>
+<li>subcortical white matter</li>
+<li>ventrivle</li>
+</ul>
+<p>들을 선정하여 진행하고자 한다. 물론 관심영영들의 적합성과 유용성은 추후에 영상품질 visual assessment 결과와 비교하고 필요시 더 적합한 관심영역을 선별하는 연구가 수행되어야 할 것이다.</p>
+<p>이를 관심영역을 이용하면 아래의 영상품질지표들을 도출할 수 있을 것으로 기대하고 있다.</p>
+<ul>
+<li>SNR (Signal-to-Noise Ratio)</li>
+<li>CNR (Contrast-to-Noise Ratio)</li>
+<li>Noise Index (Cerebellar WM 또는 Centrum semiovale WM의 표준편차를 이용)</li>
+<li>Ventricular Uptake Index: μ(ventricle) / μ(cerebellar cortex)</li>
+<li>Edge Sharpness Index: GM–WM 경계의 10–90% transition 거리<br>
+</li>
+</ul>
+</section>
+<section id="brain-pet-관심영역-자동추출" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Brain PET 관심영역 자동추출</h1>
+<p>Brain PET 영상으로부터 관심영역을 추출하는 방법으로써 자동화가 가능한 방법은 크게 3가지가 있다.</p>
+<ul>
+<li>PET template를 사용하는 방법,</li>
+<li>PET/CT의 CT를 사용하는 방법,</li>
+<li>MRI를 사용하는 방법</li>
+</ul>
+<p>이 있다. 문헌상으로 고찰 및 저자의 경험으로는 정확도는 MRI를 이용하는 방법이 압도적으로 우월하므로 MRI를 이용하는 자동화가 가능한 방법을 고찰하였다. (현 기술단계에서 MRI 없이 영상품질을 평가하는 방법은 정확도가 낮아 구현해보았자 개별병원에서 사용을 원치 않을 것이다.</p>
+<p>따라서 현 기술상태에서는 비록 brain PET을 검사한 모든 환자들에서 MRI가 있지는 않겠지만, 3D MRI 또는 비슷한 정도의 공간해상도로 획득된 MRI가 있는 경우에 한정하여 PET 검사 프로트토콜(방사성의약품 투여량)에 따른 영상품질을 평가하는 목적으로는 활용이 가능하다고 판단하였다.</p>
+<section id="spm" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="spm"><span class="header-section-number">3.1</span> SPM</h2>
+<p>전통적 정합 도구로 SPM이 사용되었왔다. 환자의 MRI를 NMI 템플릿으로 정합하고, 템플릿 공간의 ROI를 역변환하여 환자 공간에 매핑하는 방식이다. SPM은 MATLAB 기반이므로 라이선스 비용이 발생하는 단점이 있다.</p>
+</section>
+<section id="freesurfer" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="freesurfer"><span class="header-section-number">3.2</span> FreeSurfer</h2>
+<p>FreeSurfer는 뇌 MRI의 정밀 segmentation에 널리 사용되는 오픈소스 소프트웨어이다. FreeSurfer는 표준 템플릿 공간(MNI305 또는 fsaverage)에 기반한 다양한 뇌 영역의 ROI를 제공하며, 환자의 MRI를 템플릿에 정합한 후 역변환하여 환자 공간에 ROI를 매핑할 수 있다. FreeSurfer는 매우 정밀한 segmentation을 제공하지만 처리 시간이 오래 걸리는 단점이 있다(수 시간 소요).</p>
+</section>
+<section id="fastsurfer" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="fastsurfer"><span class="header-section-number">3.3</span> FastSurfer</h2>
+<p>FastSurfer는 FreeSurfer 팀이 만든 딥러닝 기반의 FreeSurfer 대체/가속 모델이며 핵심 목적은 “정확도는 유지하면서 속도를 극적으로 향상시키는 것”이다. 이 오픈소스의 장점은 FreeSurfer 수준의 정밀 segmentation을 1–2분 내 수행할 수 있어 amyloid PET, FDG PET 등 ROI mapping에 최적화되어 있다는 점이다.</p>
+<p>이 파이프라인의 모든 구성요소와 모듈은 양질의 MRI 영상을 필요로 하며, 가능한 경우 3T MRI에서 획득한 영상이 권장된다. FastSurfer는 FreeSurfer와 유사한 영상 품질을 전제로 하므로, FreeSurfer에서 정상적으로 처리되는 영상은 FastSurfer에서도 적절히 작동할 것으로 기대된다. 모듈별 특이적 제한사항을 제외하면, 영상 해상도는 1 mm에서 0.7 mm의 등방성 해상도를 권장하며, 슬라이스 두께는 1.5 mm를 초과하지 않아야 한다. 권장되는 시퀀스는 Siemens MPRAGE 또는 multi-echo MPRAGE이며, GE SPGR 역시 사용 가능하다.</p>
+<p>GitHub의 링크</p>
+<ul>
+<li>https://github.com/Deep-MI/FastSurfer</li>
+</ul>
+<p>를 통해서 소스를 다운로드 할 수 있다.</p>
+</section>
+<section id="synthseg" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="synthseg"><span class="header-section-number">3.4</span> SynthSeg</h2>
+<p>Billot 등은 SynthSeg라는 <strong>어떤 대비(contrast)와 해상도에서도 재학습 없이 적용 가능한 뇌 MRI 자동 분할 딥러닝 모델</strong>을 개발하였다 <span class="citation" data-cites="billot2023">[<a href="#ref-billot2023" role="doc-biblioref">4</a>]</span>. 이 모델은 입력 영상의 종류나 획득 조건과 관계없이 즉시 사용할 수 있으며, 다음과 같은 다양한 변동성에 대해 높은 강인성을 보인다:<br>
+(1) 어떠한 형태의 영상 대비,<br>
+(2) 슬라이스 간격이 최대 10 mm에 이르는 저해상도 영상,<br>
+(3) 정상 성인부터 고령층 및 다양한 질환군까지 매우 이질적인 인구집단,<br>
+(4) 바이어스 필드 보정, 두개골 제거(skull stripping), 정규화(normalization) 등의 전처리 여부와 무관한 입력 영상,<br>
+(5) 백질 고신호 병변(white matter lesions)을 포함한 병적 소견.</p>
+<p>SynthSeg는 처음 발표 당시, 서로 다른 대비와 해상도의 뇌 MRI 영상을 자동 분할하기 위한 모델로 제안되었다. 첫 번째 연구(Billot et al., <em>Medical Image Analysis</em>, 2023)는 재학습 없이 어떤 대비와 해상도의 MRI에서도 적용 가능한 전뇌 분할 모델을 제시하였다 <span class="citation" data-cites="billot2023">[<a href="#ref-billot2023" role="doc-biblioref">4</a>]</span>. 이후 두 번째 연구(Billot et al., <em>PNAS</em>, 2023)에서는 이를 확장하여, <strong>이질적인 임상 영상에서의 강인성 확보</strong>, <strong>피질 분할(cortical parcellation)</strong>, <strong>자동 품질평가(Quality Control)</strong> 기능을 추가하였다 <span class="citation" data-cites="billot2023">[<a href="#ref-billot2023" role="doc-biblioref">4</a>]</span>.</p>
+<p>SynthSeg는 항상 <strong>1 mm 등방성 해상도에서 출력</strong>을 생성하도록 설계되었으며, GPU에서는 약 15초, CPU에서는 약 1분 내에 한 건의 영상을 처리할 수 있다. 또한, 해상도나 대비가 매우 낮은 영상에서 성능이 저하될 수 있는 문제를 보완하기 위해 **강인성 향상 버전(SynthSeg-robust)**도 개발되었다. 이 모델은 신호 대 잡음비가 매우 낮거나 조직 대비가 약한 임상 영상에서 더 안정적으로 동작한다.</p>
+</section>
+<section id="기타모델" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="기타모델"><span class="header-section-number">3.5</span> 기타모델</h2>
+<p>SLANT, HD-BET 등 다양한 딥러닝 기반 segmentation 모델이 존재한다.</p>
+<p>위 오픈소스들 중에서 이 프로젝트에 적합한 것으로 저자는 FastSurfer 또는 SynthSeg를 사용하는 것을 검토하고 있다.</p>
+</section>
+</section>
+<section id="dicom-server" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> DICOM Server</h1>
+<p>개별병원의 clinical PACS 또는 핵의학과 PACS로부터 원하는 영상을 추출하여 별도 관리하는 것이 필요하다. 이러한 추출을 위해서 DICOM 통신이 가능한 dicom server가 필요하다. 그리고 영상품질을 자동으로 평가한 것과 visual assessment와 비교하는 등의 task를 위해서는 dicom viewer가 필요하다. 이러한 기능을 합친 것을 PACS 오픈소스라고 하며, 아래에서는 오픈소스로 이용 가능한 PACS solutione들을 검토하였다.</p>
+<section id="orthanc" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="orthanc"><span class="header-section-number">4.1</span> Orthanc</h2>
+<p>Orthanc는 Dr.&nbsp;Sébastien Jodogne가 개발한 오픈소스 DICOM 서버로, 초기 개발은 벨기에 Liège 대학병원(University Hospital of Liège, CHU de Liège)과 Belgium Federal Science Policy(BELSPO)의 연구 프로젝트를 기반으로 이루어졌다 <span class="citation" data-cites="jodogne2018">[<a href="#ref-jodogne2018" role="doc-biblioref">5</a>]</span>. 즉, 상업 솔루션이 아닌 <strong>학술 연구기관에서 출발한 경량화된 연구 중심(open-source research-oriented) PACS/DICOM 서버</strong>라는 점에서 의의가 있다. 이후 개발자는 Osimis사를 설립하여 Orthanc에 대한 상용 지원 및 플러그인 개발을 병행하고 있다.</p>
+<p>Orthanc의 주요 특징은 다음과 같다 (<a href="https://orthanc.uclouvain.be/book/index.html" class="uri">https://orthanc.uclouvain.be/book/index.html</a>). 첫째, <strong>REST API 기반의 구조</strong>를 통해 Python 등의 프로그래밍 환경에서 DICOM 헤더 메타데이터, 픽셀 데이터, 방사선량 정보(예: Radiation Structured Dose Report), series 단위의 품질 지표 등 다양한 정보를 자동으로 추출하기 용이하다. 둘째, Lua 스크립트 기반의 태그 조작 기능을 제공하여 가명화(pseudonymization) 정책 구현을 유연하게 지원하며, FF3-1 방식의 암호화 등도 손쉽게 적용할 수 있어 연구 데이터 보호 체계를 구축하는 데 적합하다. 셋째, Docker를 이용한 경량 배포가 가능하고 단일 바이너리 구조로 설치와 유지보수가 용이하다. PostgreSQL 플러그인과 연동할 경우 대규모(수십만~수백만 건)의 영상 저장 및 질의 처리에도 대응할 수 있다.</p>
+<p>Orthanc의 기술 스택은 C++ 기반의 핵심 엔진(저장·조회·전송 및 REST API 제공), Lua 기반 가명화 및 이벤트 후킹 기능, Python 플러그인을 통한 고급 자동화 및 AI 파이프라인 연동 기능, 웹 기반 뷰어(WebViewer) 플러그인, PostgreSQL 플러그인 등을 포함한다. 이러한 구조적 특성으로 인해 Orthanc는 연구 환경에서 대규모 의료영상 메타데이터 처리, 자동화 기반 품질평가, 방사선량 정보 추출 등 다양한 활용 사례에 적합한 플랫폼으로 평가된다.</p>
+<hr>
+</section>
+<section id="dcm4chee" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="dcm4chee"><span class="header-section-number">4.2</span> DCM4CHEE</h2>
+<p>DCM4CHEE(DCM4CHE Enterprise Edition)는 대규모 의료기관에서 널리 사용되는 대표적인 오픈소스 PACS로, 상용 PACS와 유사한 수준의 엔터프라이즈 기능을 제공하는 것이 특징이다 (<a href="https://web.dcm4che.org/" class="uri">https://web.dcm4che.org/</a>). 이 시스템은 Java 기반 애플리케이션 서버 구조를 기반으로 하며, WildFly/JBoss 플랫폼 위에서 동작하도록 설계되어 고성능 및 고확장성을 갖춘다.</p>
+<p>DCM4CHEE는 DICOM 저장(archive), Worklist 서비스, HL7 연동, 모달리티 관리, 데이터 포워딩 및 라우팅 등 임상 PACS에서 요구되는 핵심 기능을 포괄적으로 지원한다. 이러한 구조적 특성으로 인해 대형 병원 및 의료기관에서의 대규모 이미지 저장소 운용 및 복잡한 임상 워크플로우 처리에 적합한 것으로 평가된다. 또한 고가용성(High Availability, HA) 구성이 가능하여 엔터프라이즈 환경에서의 지속적인 서비스 운영을 지원한다.</p>
+<p>반면, 시스템 구조가 복잡하고 초기 설정 및 운영 과정에서 높은 수준의 전문성이 요구되며, 학습 곡선이 가파르다는 점은 제한점으로 지적된다. 이러한 특성 때문에 연구 목적의 소규모 환경보다는 대규모 의료기관에서의 임상 PACS 구축에 더 적합한 솔루션으로 분류된다.</p>
+<hr>
+</section>
+<section id="conquest-dicom-server" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="conquest-dicom-server"><span class="header-section-number">4.3</span> Conquest DICOM Server</h2>
+<p>Conquest DICOM Server는 비교적 오래전부터 개발되어 온 경량화된 오픈소스 DICOM 서버로, 안정성과 단순성을 특징으로 한다 (<a href="https://github.com/marcelvanherk/Conquest-DICOM-Server" class="uri">https://github.com/marcelvanherk/Conquest-DICOM-Server</a>). C/C++ 기반으로 구현되어 있으며 설치가 용이하고 Windows 환경에서도 쉽게 운용할 수 있어, 소규모 연구 환경이나 테스트 목적의 PACS 구성에 자주 활용된다. 주요 기능으로는 DICOM Query/Retrieve 및 Store 서비스 지원이 포함되며, 기본적인 영상 저장 및 조회 기능을 수행하는 데 적합하다.</p>
+<p>Conquest의 장점은 설정 과정이 단순하고 학습 비용이 거의 들지 않는다는 점이며, 경량 구조로 인해 속도와 안정성이 우수하다. 그러나 기능 확장성은 제한적이며 REST API 기반의 현대적 데이터 접근 방식이 부족하다는 점에서 복잡한 자동화, 인공지능(AI) 기반 처리, 또는 대규모 연구용 메타데이터 파이프라인 구축에는 제약이 따른다. 이러한 특성으로 인해 Conquest는 대형 PACS보다는 소규모 연구 환경이나 테스트 환경에서의 활용에 보다 적합한 솔루션으로 평가된다.</p>
+<hr>
+</section>
+<section id="dicoogle" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="dicoogle"><span class="header-section-number">4.4</span> Dicoogle</h2>
+<p>Dicoogle은 포르투갈 University of Aveiro 연구팀에서 개발된 오픈소스 기반의 확장형 DICOM 검색 및 추출(search and retrieval) 플랫폼으로, 연구 환경에서의 영상 메타데이터 분석을 목표로 설계되었다 (<a href="https://dicoogle.com/" class="uri">https://dicoogle.com/</a>). 이 시스템은 Java 기반으로 구현되었으며, 플러그인 아키텍처를 통해 다양한 기능 확장이 가능하다는 점이 특징이다.</p>
+<p>Dicoogle은 DICOM 저장 기능뿐 아니라 ElasticSearch 기반의 인덱싱(indexing) 엔진을 활용하여 메타데이터를 체계적으로 색인화할 수 있도록 지원한다. 이를 통해 표준 DICOM 태그뿐 아니라 사용자 정의 메타데이터(custom metadata)까지 자유롭게 확장하여 저장·검색할 수 있으며, 대규모 연구 데이터셋에서의 image mining 및 분석 작업에 적합한 구조를 갖춘다.</p>
+<p>장점으로는 고급 검색 기능, 높은 메타데이터 확장성, 연구용 분석 워크플로우에 최적화된 구조 등이 있으며, 이는 Orthanc과 같은 경량 PACS보다 보다 유연한 메타데이터 분석 환경을 제공한다. 반면, 설치 및 초기 설정의 난이도가 비교적 높고, 임상 PACS에서 요구되는 완전한 워크플로우(예: Worklist, HL7 연동 등)를 제공하지 않기 때문에 임상 운영보다는 연구 중심의 DICOM 검색·분석 엔진으로 활용되기에 적합하다.</p>
+<hr>
+</section>
+<section id="비교-요약" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="비교-요약"><span class="header-section-number">4.5</span> 비교 요약</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>항목</th>
+<th>Orthanc</th>
+<th>DCM4CHEE</th>
+<th>XNAT</th>
+<th>Conquest</th>
+<th>Dicoogle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>개발 언어</td>
+<td>C++</td>
+<td>Java</td>
+<td>Java</td>
+<td>C/C++</td>
+<td>Java</td>
+</tr>
+<tr class="even">
+<td>핵심 목적</td>
+<td>경량 PACS + 연구 자동화</td>
+<td>엔터프라이즈 PACS</td>
+<td>연구용 이미지 플랫폼</td>
+<td>초경량 DICOM 서버</td>
+<td>고급 검색·인덱싱 엔진</td>
+</tr>
+<tr class="odd">
+<td>난이도</td>
+<td>낮음</td>
+<td>매우 높음</td>
+<td>중간</td>
+<td>매우 낮음</td>
+<td>중간</td>
+</tr>
+<tr class="even">
+<td>확장성</td>
+<td>높음 (REST/Plugins)</td>
+<td>매우 높음</td>
+<td>연구 중심</td>
+<td>낮음</td>
+<td>매우 높음</td>
+</tr>
+<tr class="odd">
+<td>데이터 추출</td>
+<td>매우 강력</td>
+<td>보통</td>
+<td>강력</td>
+<td>약함</td>
+<td>매우 강력</td>
+</tr>
+<tr class="even">
+<td>가명화</td>
+<td>용이</td>
+<td>가능</td>
+<td>별도 구성 필요</td>
+<td>제한적</td>
+<td>가능</td>
+</tr>
+<tr class="odd">
+<td>Docker 배포</td>
+<td>쉬움</td>
+<td>어려움</td>
+<td>쉬움</td>
+<td>쉬움</td>
+<td>중간</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>저자는 현재 Conquest dicom server로 dicom node의 역할을 수행케 하고 Orthanc로 연구용 PACS를 모사하여 테스트하는 중이다.</p>
+</section>
+</section>
+<section id="dicom-선량정보-추출을-위한-오픈소스" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> DICOM 선량정보 추출을 위한 오픈소스</h1>
+<p>Brain PET/CT 영상을 획득하면 두가지 Series dicom 파일이 생성된다. 하나는 PET 영상에 대한 것이고, 다른 하나는 CT 영상에 대한 것이다. 최신의 CT라면 RDSR라고 하는 CT 선량보고서가 별도의 dicom 파일로 분리되어 있어, 이를 추출하는 것은 어렵지 않고 몇몇 오픈소스는 이러한 기능을 지원한다. 그러나 핵의학분야의 선량관리를 위해서는 PET 영상의 dicom 파일 헤더에 기록된 방사성의약품 투여량도 추출하는 기능이 필요하다. 여기에서는 이러한 두 가지 관점에서 오픈소스들을 검토하였다.</p>
+<section id="doseutility" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="doseutility"><span class="header-section-number">5.1</span> DoseUtility</h2>
+<p>DoseUtility는 X-ray 및 CT 기반 방사선량 정보를 분석하기 위해 개발된 경량 오픈소스 프로그램으로, 특정 개발자 개인(초기 GitHub 기반 소규모 개인 개발 프로젝트)에 의해 관리되던 도구이다 (<a href="https://www.dclunie.com/pixelmed/software/webstart/DoseUtilityUsage.html" class="uri">https://www.dclunie.com/pixelmed/software/webstart/DoseUtilityUsage.html</a>). 이 소프트웨어는 RDSR 파일로부터 CTDIvol과 DLP와 같은 핵심 CT 선량 지표를 추출하고, IEC 구조의 선량 보고서 형태로 결과를 정리할 수 있도록 설계되었다. 단일 환자뿐 아니라 여러 건의 RDSR을 일괄 처리할 수 있으며, Python 스크립트를 이용하여 자동화된 분석 파이프라인 내부에 통합하는 것도 가능하다는 점에서 연구 및 교육 목적에 유용하다.</p>
+<p>그러나 DoseUtility는 개발이 오래전에 중단되어 현재 더 이상 버전업이 이루어지지 않으며, 공식적인 유지보수도 제공되지 않는다. 또한 현대적 배포 방식인 Docker 기반 설치가 안정적으로 지원되지 않아, 최신 환경에서의 설치 및 사용성이 제한적이다. 기능적으로는 CT 선량 보고서 분석에는 유용하나, PACS 연동 기능이 부족하고 PET/CT 또는 핵의학적 방사성의약품 투여량 정보를 처리할 수 있는 기능이 제공되지 않아, 대규모 병원 환경이나 통합 선량 관리 시스템 구축에는 적용에 한계가 있다. 이러한 이유로 DoseUtility는 현재 소규모 연구 환경에서 CT 선량 분석을 수행하는 보조 도구 정도로 활용 가능하나, 핵의학 선량관리를 포함하는 확장된 워크플로우를 지원하는 용도로는 적합하다고 보기 어렵다.</p>
+</section>
+<section id="openrem" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="openrem"><span class="header-section-number">5.2</span> OpenREM</h2>
+<p>OpenREM(Open Radiation Exposure Monitoring)은 의료기관 단위의 방사선 선량 감시(radiation exposure monitoring) 시스템 구축을 목적으로 개발된 대표적인 오픈소스 플랫폼이다 (<a href="https://openrem.org/" class="uri">https://openrem.org/</a>). 이 시스템은 DICOM Radiation Dose Structured Report(RDSR)를 자동으로 수집·분석하도록 설계되었으며, CT, 투시촬영(fluoroscopy), 유방촬영술(mammography), 그리고 PET/CT를 포함한 다양한 모달리티를 지원한다. OpenREM은 PACS 또는 모달리티 장비로부터 직접 DICOM 객체를 수신할 수 있고, PostgreSQL 기반 데이터베이스와 Django 기반 웹 인터페이스를 통해 환자, 장비, 프로토콜 단위의 선량 정보를 체계적으로 저장·관리할 수 있다. 또한 EARL, EANM, ICRP 등의 국제 가이드라인에 근거한 선량 분석 기능을 제공하여 임상 선량 관리 체계의 표준화된 구현을 가능하게 한다.</p>
+<p>OpenREM의 주요 장점은 선량 데이터의 자동 수집, 정교한 RDSR 파싱, 통계 분석, 웹 기반 리포팅을 단일 플랫폼 내에서 통합적으로 수행할 수 있다는 점이다. 다양한 PACS 및 의료영상장비와의 연동성이 우수하여 대규모 병원 시스템에서도 안정적으로 운영될 수 있으며, 임상 선량 감시 체계를 구축하는 데 적합한 구조를 갖추고 있다.</p>
+<p>반면, 설치 및 환경 구성의 난이도는 상대적으로 높은 편이며, Docker 기반 배포도 가능하나 설정 구조가 복잡하여 초기 구축에 일정한 기술적 역량이 요구된다.</p>
+<section id="자체-개발을-통한-dicom-기반-선량-정보-추출" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="자체-개발을-통한-dicom-기반-선량-정보-추출"><span class="header-section-number">5.2.1</span> 자체 개발을 통한 DICOM 기반 선량 정보 추출</h3>
+<p>앞서 검토한 오픈소스 시스템들은 CT의 RDSR(Radiation Dose Structured Report) 추출에는 유용하지만, PET 영상의 DICOM 헤더에 기록된 방사성의약품 투여량 정보를 완전하게 지원하지 않는다는 한계가 있다. 따라서 핵의학 영역에서의 선량 관리 및 연구 목적의 정밀한 데이터 처리를 위해서는 <strong>DCMTK 및 Python 기반 DICOM 라이브러리를 이용한 자체 개발이 필수적</strong>이다. 이 절에서는 이러한 목적을 위해 활용 가능한 주요 오픈소스 도구를 정리하였다.</p>
+<p>DCMTK는 독일 OFFIS 연구소에서 개발된 대표적인 C++ 기반 DICOM 라이브러리로, 의료영상 연구 및 산업 분야에서 폭넓게 사용되는 참조(reference-grade) 도구이다. <code>dcmdump</code>는 모든 DICOM 태그를 출력할 수 있어 PET 및 CT 영상의 선량 관련 태그를 직접 확인하는 데 유용하며, <code>dsr2xml</code>과 <code>xml2dsr</code> 도구는 Structured Report(SR), 특히 RDSR을 XML 형식과 DICOM 객체 간 변환할 수 있도록 하여 XML 기반 선량 분석을 가능하게 한다. 또한 <code>storescu</code>·<code>storescp</code>, <code>findscu</code>·<code>movescu</code> 도구는 DICOM Store 및 Query/Retrieve를 지원하여 PACS와의 연동을 용이하게 한다. DCMTK는 사용자 인터페이스(UI)를 제공하지 않으며 고수준 분석 기능은 포함하지 않지만, DICOM 표준에 가장 충실하고 Orthanc 및 기타 PACS 환경과의 호환성이 우수하다는 점에서 핵심 기반 도구로 적합하다.</p>
+<p>Python 생태계에서도 선량 정보 분석을 위한 다양한 도구를 활용할 수 있다. <code>pydicom</code>은 DICOM 파일의 태그를 Python 환경에서 직접 접근·편집할 수 있는 라이브러리로, RDSR의 XML 구조 파싱뿐 아니라 PET 영상의 헤더에 포함된 방사성의약품 투여량 정보를 손쉽게 추출할 수 있다. <code>pynetdicom</code>은 C-STORE, C-FIND, C-MOVE 등 표준 DICOM 네트워크 프로토콜을 구현한 라이브러리로, PACS 또는 모달리티 장비로부터 실시간으로 선량 SR을 수집하는 기능을 제공한다. 또한 <code>highdicom</code>은 SR 객체 및 좌표 체계와 같은 고수준 DICOM 구조를 Python 객체 형태로 해석할 수 있도록 하여 RDSR 분석의 편의성을 높인다.</p>
+<p>이와 같은 DCMTK 및 Python 기반 도구들은 매우 유연하며 자동화 파이프라인 구축에 적합하다는 장점이 있으나, 별도의 데이터베이스나 사용자 인터페이스는 제공하지 않으므로 병원 규모의 선량 감시 시스템을 구축하기 위해서는 추가적인 개발이 요구된다. 그럼에도 불구하고 PET/CT, CT, 투시 촬영 등 다양한 모달리티에서 선량 관련 태그를 직접 추출하고, Orthanc와 같은 PACS와의 연동을 통해 맞춤형 선량 관리 시스템을 구축하는 데 매우 유효한 기술적 기반을 제공한다.</p>
+</section>
+</section>
+</section>
+<section id="가명화pseudonymization의-필요성과-형태보존-암호화-기반-구현" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> 가명화(Pseudonymization)의 필요성과 형태보존 암호화 기반 구현</h1>
+<p>의료영상 데이터는 환자식별정보, 임상정보, 메타데이터가 함께 포함되는 고위험 개인정보이며, 「개인정보 보호법(시행 2025.3.13.)」에서는 개인정보를 성명, 주민등록번호, 개인을 식별할 수 있는 영상 등 직접 식별 정보뿐 아니라, 다른 정보와 결합하여 개인을 알아볼 수 있는 모든 정보를 포함하는 개념으로 정의하고 있다(제2조 제1호). 또한 동법은 개인정보를 추가 정보 없이는 특정 개인을 식별할 수 없도록 처리하는 행위를 “가명처리”(제2조 제1호의2)로 규정하고 있으며, 2024년 개정된 「가명정보 처리 가이드라인」과 「보건의료데이터 활용 가이드라인」에서는 보건의료 데이터의 활용을 전제로 한 안전한 가명처리 기준을 제시하고 있다.</p>
+<p>의료영상 연구에서는 환자의 재식별 위험을 최소화하기 위해 DICOM 헤더에 포함된 환자 ID, 이름, 검사번호 등 직접식별자의 가명처리가 필수적이며, 가명처리 방식 중 하나인 **형태보존 암호화(Format Preserving Encryption, FPE)**는 원본 데이터의 형식과 길이를 유지한 상태에서 암호문을 생성할 수 있어 데이터베이스 구조를 변경하지 않고도 적용할 수 있다는 장점이 있다. FPE의 국제표준은 미국 NIST에서 규정한 FF1 및 FF3 계열 알고리즘이며, FF3의 보안 취약성이 보고됨에 따라 이를 보완한 <strong>FF3-1 알고리즘</strong>이 NIST SP 800-38G Rev.1을 통해 표준화되고 있다.</p>
+<p>FF1·FF3·FF3-1 알고리즘은 내부적으로 AES(128/192/256-bit)를 기반으로 여러 라운드의 변환을 수행하여 입력값의 자릿수·형식을 유지한 채 암호문을 생성한다. FPE는 입력값을 두 부분으로 분할한 뒤, 우측 블록을 암호화하여 생성된 F값을 좌측 블록과 결합하는 과정을 반복하는 구조를 갖는다. 이러한 특성은 의료기관에서 사용되는 환자식별자·검사번호처럼 고정된 자리수·숫자형식의 식별자를 가명화하는 데 적합하다. 다만 FPE 적용 시 짧은 길이의 입력값에서 보안성이 저하될 수 있으므로, 패딩으로 최소 길이를 확보하거나 Tweak 값을 적절히 조정하는 것이 필요하며, 본 연구에서는 Tweak을 고정하여 일관성 있는 암호문 생성을 목표로 하였다.</p>
+<p>국내 법령과 가이드라인은 특정 가명화 알고리즘을 강제하지 않고 있으나, 국제표준 기반의 안정성이 확보된 방식의 선택을 권고하고 있으며, 이러한 맥락에서 FF3-1 알고리즘은 높은 실무 적합성을 갖는다. FF3-1은 Python 등에서 오픈소스 패키지로 구현되어 있어 연구환경에서 활용이 용이하며, 본 연구에서도 해당 알고리즘을 기반으로 한 가명화 모듈을 개발하여 스프레드시트 환경에서 기능을 검증하였고, 향후 DICOM 통신환경에서의 적용을 평가할 계획이다.</p>
+<p>이와 더불어 의료영상 연구에서는 데이터 활용 목적에 따라 다양한 수준의 비식별화 전략이 요구되므로, 연구용 PACS 시스템에서 <strong>익명화(Anonymization), 가명화(Pseudonymization), 원본 유지(Retain Original) 중 선택할 수 있는 다중 비식별화 옵션을 제공하는 기능적 설계가 필요</strong>하다. 이러한 구조는 연구 목적·윤리 규정·데이터 민감도에 따라 유연한 데이터 보호 수준을 적용할 수 있게 하며, 가명화 키의 중앙관리(Vault 등), 접근통제(Keycloak 기반 RBAC), 로그기록(ELK 기반 감사 환경)과 결합하여 의료영상 데이터의 안전한 활용을 위한 기반을 구성할 수 있다.</p>
+</section>
+<section id="의료영상-데이터-보호를-위한-인프라-구성-전략" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> 의료영상 데이터 보호를 위한 인프라 구성 전략</h1>
+<p>가명화 PACS를 단독으로 운영하는 것만으로는 개인정보보호법 및 ISMS-P에서 요구하는 관리적·기술적·물리적 보호조치를 충분히 충족하기 어렵다. 의료영상 데이터는 식별자, 임상검사정보, 네트워크 로그 등 다양한 유형의 개인정보를 포함하고 있으며, 이에 대한 안전한 보관 및 처리에는 시스템 전반에 걸친 보안 인프라가 요구된다. 안전한 데이터 처리 환경을 구축하기 위해서는 비밀번호 및 비밀키의 안전한 관리, 로그의 중앙집중형 수집 및 변조 방지, 통신 구간의 TLS 암호화, 사용자·서비스 단위의 접근권한 분리, 중앙 인증체계의 확보, 그리고 감사 이력의 보존과 같은 기본 요건이 충족되어야 한다. 본 절에서는 이러한 개인정보보호 요구를 충족하기 위해 활용할 수 있는 Docker 기반 보안 서비스들을 소개하고 그 역할을 기술한다.</p>
+<section id="vault-hashicorp-vault" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="vault-hashicorp-vault"><span class="header-section-number">7.1</span> Vault (HashiCorp Vault)</h2>
+<p>Vault는 비밀정보(secret)와 암호화 키를 중앙에서 관리하는 오픈소스 솔루션으로, 데이터 보호 체계의 핵심 구성요소로 활용될 수 있다. Vault는 FF3-1 기반 가명화에 사용되는 암호화 키를 안전하게 저장하고, PostgreSQL, PACS, Keycloak 등 다양한 서비스에서 사용하는 비밀번호 및 API 토큰을 통합적으로 관리한다. 또한 Vault PKI를 활용하면 TLS 인증서의 발급과 갱신을 자동화할 수 있으며, 접근제어 정책(ACL)을 적용하여 서비스별로 권한을 세분화할 수 있다. 더불어 변조 방지가 가능한 감사 로그(Audit device)를 생성함으로써 키 관리 및 접근 이력의 추적 가능성을 보장할 수 있다. 이러한 기능들은 개인정보보호법에서 요구하는 비밀키 보호, 중앙 관리, 감사 체계 구축의 기준과 부합한다.</p>
+</section>
+<section id="bitwarden-self-hosted" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="bitwarden-self-hosted"><span class="header-section-number">7.2</span> Bitwarden (Self-hosted)</h2>
+<p>Bitwarden은 사용자 계정의 비밀번호를 안전하게 저장하고 관리하기 위한 오픈소스 비밀번호 관리 플랫폼으로, 자체 호스팅을 통해 Docker 기반 환경에서 구축할 수 있다. 이를 통해 관리자 및 연구자 계정의 강력한 비밀번호를 중앙에서 체계적으로 관리할 수 있으며, 2단계 인증(2FA)을 기반으로 보안을 강화할 수 있다. Orthanc 관리자 계정이나 PostgreSQL 관리 계정과 같은 공유 자격증명도 안전하게 보관하고 필요한 사용자들에게 제한적으로 제공할 수 있어 조직 내 자격증명 노출을 예방한다. 이러한 구조는 개인정보보호법에서 요구하는 “적합한 비밀번호 관리” 기준을 충족한다.</p>
+</section>
+<section id="postgresql" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="postgresql"><span class="header-section-number">7.3</span> PostgreSQL</h2>
+<p>PostgreSQL은 선량 정보(NMDOSE), 영상품질 정보(NMIQ), PACS 메타데이터, 감사 로그 등 연구 및 임상 운영에서 필요한 핵심 데이터를 저장하는 주요 데이터베이스 역할을 수행한다. 역할 기반 접근제어(RBAC)를 통해 세분화된 권한 분리가 가능하며, TLS 기반 암호화 통신을 통해 전송 구간의 데이터 보안이 확보된다. 또한 pgaudit 등의 확장 모듈을 통해 데이터 접근 및 수정 이력에 대한 감사 기능을 강화할 수 있다. 개인정보보호법 및 ISMS-P의 요구사항 중 데이터 접근 통제, 암호화, 감사 이력 유지 등의 기준을 충족하는데 적합하며, 가명처리된 데이터 저장소로도 활용할 수 있다.</p>
+</section>
+<section id="elk-stack-elasticsearch-logstash-kibana" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="elk-stack-elasticsearch-logstash-kibana"><span class="header-section-number">7.4</span> ELK Stack (Elasticsearch, Logstash, Kibana)</h2>
+<p>ELK Stack은 의료영상 시스템에서 생성되는 다양한 로그를 중앙에서 수집·저장·분석하기 위한 핵심 구성요소이다. Orthanc, Vault, PostgreSQL, Keycloak 등 여러 서비스에서 발생하는 로그는 Filebeat를 통해 수집되어 Logstash에서 전처리된 후 Elasticsearch에 저장된다. 저장된 로그는 변조 방지 정책(WORM 정책, 변경 불가 인덱스 관리)을 적용할 수 있으며, Kibana를 통해 인증·접근·오류 이벤트를 시각화하고 모니터링할 수 있다. 이는 개인정보보호법에서 요구하는 “로그의 중앙 수집·변조방지·보존” 기준을 충족하며, 보안 사고 대응을 위한 핵심 인프라로 기능한다.</p>
+</section>
+<section id="keycloak" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="keycloak"><span class="header-section-number">7.5</span> Keycloak</h2>
+<p>Keycloak은 사용자 인증(authentication), 접근 권한 관리(authorization), 단일로그인(SSO)을 제공하는 오픈소스 IAM(Identity and Access Management) 솔루션이다. OpenID Connect 및 OAuth2 기반 인증을 지원하며, Orthanc, NMDOSE, NMIQ, AI4REF 등을 포함한 각종 웹 애플리케이션에 대해 통합 로그인 환경을 구성할 수 있다. 역할 기반 권한관리(RBAC), 다중요소 인증(MFA) 기능을 제공하여 사용자별 권한 구분 및 접근제어를 체계적으로 수행할 수 있으며, 외부 LDAP과 연동하여 조직 단위의 계정 체계를 통합 관리할 수 있다. 이는 개인정보보호법에서 요구하는 “접속자별 권한 구분” 및 “중앙 인증 시스템 존재” 기준을 충족한다.</p>
+</section>
+<section id="ldap-openldap" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="ldap-openldap"><span class="header-section-number">7.6</span> LDAP (OpenLDAP)</h2>
+<p>OpenLDAP은 조직의 사용자·그룹 정보를 중앙에서 관리하는 디렉터리 서비스로, Keycloak의 Identity Provider로 활용될 수 있다. 이를 통해 기관 내 계정 정보를 통합적으로 관리할 수 있으며, Orthanc 또는 DCM4CHEE의 인증 체계와도 연동이 가능하다. LDAP 기반 구조는 사용자 그룹별 접근권한 분리, 계정 생성·삭제·권한 회수의 중앙 관리, 접근 기록 보존 등의 기능을 제공하여 개인정보보호 요구사항을 충족하는 기본 인프라를 구성한다.</p>
+</section>
+</section>
+<section id="활용방안" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> 활용방안</h1>
+<p>개발 중인 시스템은 핵의학 영상데이터에서 방사선량과 영상품질을 동시에 정량화할 수 있도록 설계되어 있으며, 임상 운영·학회 통계·국가 진단참고수준(DRL) 조사·인공지능 학습 인프라 등 다양한 영역에서 활용될 수 있다.</p>
+<section id="프로토콜-기반의-영상-품질-및-선량-평가" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="프로토콜-기반의-영상-품질-및-선량-평가"><span class="header-section-number">8.1</span> 프로토콜 기반의 영상 품질 및 선량 평가</h2>
+<p>DICOM 헤더에는 영상 획득 장비가 기록한 검사 프로토콜 정보가 포함되어 있으며, 이 시스템은 해당 정보를 기반으로 프로토콜 단위의 품질관리(Quality Control, QC)를 수행하도록 구성하였다. 이를 통해 동일한 검사 프로토콜 내에서 투여량과 영상품질을 동시에 평가할 수 있고, 장비 간 또는 기간 간 품질 편차를 정량화하여 프로토콜 최적화를 구현할 수 있다. 특히 Brain PET 영상의 경우 SNR, SUV의 재현성 등 정량적 품질지표를 활용할 수 있어, 프로토콜 수준의 품질 향상에 실질적인 기여가 가능하다.</p>
+</section>
+<section id="핵의학-검사-통계-체계의-자동화" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="핵의학-검사-통계-체계의-자동화"><span class="header-section-number">8.2</span> 핵의학 검사 통계 체계의 자동화</h2>
+<p>대한핵의학회에서는 매년 병원별 영상검사 건수를 수집하여 통계를 산출하고 있다. 대부분의 기관에서는 PACS 또는 핵의학과 내부 시스템에서 데이터를 자동 혹은 반자동 방식으로 추출하여 보고하고 있을 것이다. 저자가 개발하는 시스템은 병원 PACS 또는 핵의학과 PACS와 직접 연동하도록 설계되어, 영상검사 건수의 자동 집계가 가능하다. 저자는 이미 핵의학 영상검사 표준명칭 체계를 개발하여 학회의 승인을 받은 바 있으며, 이를 기반으로 각 기관의 검사명칭을 표준명칭으로 자동 변환하는 매핑 테이블 기능을 제공하고자 한다. 이러한 구조는 학회 통계작성의 정확성을 향상시키며, 표준화된 데이터의 자동 업로드 체계를 구축하기 위해서는 통계 서버의 일부 구조 조정이 필요하다.</p>
+</section>
+<section id="핵의학-분야-국가-drl-조사사업-지원" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="핵의학-분야-국가-drl-조사사업-지원"><span class="header-section-number">8.3</span> 핵의학 분야 국가 DRL 조사사업 지원</h2>
+<p>이 시스템의 1차적인 개발 목적은 핵의학 분야의 국가 진단참고수준(DRL) 조사체계를 지원하는 것이다. PET 및 PET/CT 영상의 DICOM 헤더에서 방사성의약품 투여량을 자동 추출하는 기능만으로도 선량 조사에 활용할 수 있으며, 영상품질평가 기능까지 포함할 경우 병원별 품질 수준을 동시에 평가할 수 있다. 이와 같은 구조는 설문 기반 또는 수동 입력 기반의 기존 DRL 조사 대비 정확성과 효율성을 크게 향상시킬 수 있다. 병원별 시스템 구성에 따라 선량 정보 또는 품질관리 기능을 선택적으로 적용할 수 있도록 설계되었으며, 국가 단위 DRL 조사를 위한 기술적 기반을 제공한다. 그러나 감마영상에 대해서는 아직 수집방법이 없어 별도의 고려가 필요하다.</p>
+</section>
+<section id="인공지능-학습-인프라로서의-확장성" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="인공지능-학습-인프라로서의-확장성"><span class="header-section-number">8.4</span> 인공지능 학습 인프라로서의 확장성</h2>
+<p>Brain PET 영상은 CT 또는 MRI에 비해 단층 수가 적고 구조적 복잡성이 낮아 인공지능 학습 측면에서 유리한 데이터 특성을 갖는다. 이 시스템은 자동화된 IQ 평가, 자동 세그멘테이션, 안전한 가명화 기능을 통합함으로써 다기관 학습용 데이터셋을 대규모로 구성할 수 있는 기반을 제공한다. 이러한 환경은 PET 영상 기반 기능적 바이오마커 개발, 분류(classification)·예후 예측 모델 개발 및 병변 특성 분석을 위한 학습 데이터 확보에 유용하다.</p>
+<p>AI 학습에서 가장 큰 병목은 여전히 고품질 라벨링(labeling)의 확보이다. PET 영상 판독은 해석자의 전문성에 크게 의존하며, 병소의 미세한 형태와 해석 변이가 존재하기 때문에 대규모 라벨 수집은 상당한 시간과 비용이 요구된다. 최근에는 대규모 언어모델(LLM)에 기반한 AI Agent API가 상용화되면서, 판독문을 자동으로 구조화하고 메타데이터화하는 기술이 현실화되었다. 이는 자체 LLM 개발 없이도 라벨링 부담을 일부 해소할 수 있는 장점이 있으나, API 비용 구조 및 메타데이터 신뢰성 검증 등 제한점도 존재한다. 자동 생성된 데이터의 임상적 타당성을 확보하기 위해서는 여전히 핵의학 전문의의 검증이 필수적이며, 신뢰성 확보를 위한 검증체계는 단일 기관 수준에서 구축하기 어렵다. 이러한 점에서 대한핵의학회 중심의 다기관 협력 연구모델이 필수적으로 마련되어야 한다.</p>
+<p>저자는 현재 Brain PET 판독문을 AI Agent API를 이용해 메타데이터로 자동 변환하는 기능을 시험 중이며, 이 과정에서 익명화·가명화 절차를 사전에 자동 적용하도록 구현하고 있다. 중앙 학습이 어려운 경우에는 분산학습(federated learning)이 대안이 되지만, 해당 기술을 본 시스템에 적용할 수 있을지는 추가적 기술 검토가 필요하다.<br>
+</p>
+</section>
+</section>
+<section id="맺음말" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> 맺음말</h1>
+<p>이 고찰에서 제안한 의료영상 기반 선량·품질관리 시스템은 국가적 차원의 표준화 및 진단참고수준(DRL) 조사에도 적용 가능한 구조를 갖추고 있으며, 이러한 시스템은 개별 기관의 역량을 넘어 국가적 지원 아래 개발·운영되는 것이 바람직하다고 판단된다. 특히 핵의학 분야의 DRL 구축을 위한 데이터 수집·가명화·표준화 시스템은 고도의 기술적 완성도와 지속적 유지관리가 요구되므로, 개인 또는 단일 연구자 단위에서 감당하기에는 상당한 부담이 따른다.</p>
+<p>저자는 식품의약품안전처, 과학기술정보통신부 산하 연구재단, 원자력안전위원회 등 여러 공공기관을 통해 관련 연구가 필요함을 지속적으로 제안해 왔으나, 현행 연구비 편성체계에서는 선량조사 사업과 같은 특수 목적 연구가 우선순위로 설정되기 어려운 구조적 한계가 있다. 이에 따라 핵의학 분야의 국가 DRL 구축을 위해 필요한 핵심 시스템이 향후에도 민간 또는 개인 연구자의 역량에 의존하여 개발될 가능성이 높다는 점은 우려되는 바이다.</p>
+<p>그럼에도 불구하고 본 연구에서 정리한 기술현황 분석과 오픈소스 기반 구현 전략은 향후 국가적 데이터 기반 의료품질관리 체계 구축의 기초 자료로 활용될 수 있으며, 관련 분야의 정책적 논의와 연구지원 체계 마련에도 기여할 것으로 기대된다.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-salvadori2019" class="csl-entry" role="listitem">
+1. Salvadori J, Imbert L, Perrin M, Karcher G, Lamiral Z, Marie P-Y, et al. Head-to-head comparison of image quality between brain 18F-FDG images recorded with a fully digital versus a last-generation analog PET camera. EJNMMI Research [Internet]. 2019;9:61. <a href="https://doi.org/10.1186/s13550-019-0526-5">https://doi.org/10.1186/s13550-019-0526-5</a>
+</div>
+<div id="ref-heeman2020" class="csl-entry" role="listitem">
+2. Heeman F, Hendriks J, Lopes Alves I, Ossenkoppele R, Tolboom N, Berckel BNM van, et al. [11C]PIB amyloid quantification: effect of reference region selection. EJNMMI Research [Internet]. 2020;10:123. <a href="https://doi.org/10.1186/s13550-020-00714-1">https://doi.org/10.1186/s13550-020-00714-1</a>
+</div>
+<div id="ref-chiao2019" class="csl-entry" role="listitem">
+3. Chiao P, Bedell BJ, Avants B, Zijdenbos AP, Grand’Maison M, O’Neill P, et al. Impact of Reference and Target Region Selection on Amyloid PET SUV Ratios in the Phase 1b PRIME Study of Aducanumab. Journal of Nuclear Medicine [Internet]. 2019;60:100–6. <a href="https://doi.org/10.2967/jnumed.118.209130">https://doi.org/10.2967/jnumed.118.209130</a>
+</div>
+<div id="ref-billot2023" class="csl-entry" role="listitem">
+4. Billot B, Magdamo C, Cheng Y, Arnold SE, Das S, Iglesias JE. Robust machine learning segmentation for large-scale analysis of heterogeneous clinical brain MRI datasets. Proceedings of the National Academy of Sciences [Internet]. 2023;120:e2216399120. <a href="https://doi.org/10.1073/pnas.2216399120">https://doi.org/10.1073/pnas.2216399120</a>
+</div>
+<div id="ref-jodogne2018" class="csl-entry" role="listitem">
+5. Jodogne S. The orthanc ecosystem for medical imaging. Journal of Digital Imaging [Internet]. 2018;31:341–52. <a href="https://doi.org/10.1007/s10278-018-0082-y">https://doi.org/10.1007/s10278-018-0082-y</a>
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

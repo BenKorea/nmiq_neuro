@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   title: "nmiq_neuro"
@@ -14,6 +15,13 @@ format:
     theme: cosmo
     css: styles.css
     toc: true
+    number-sections: true
+
 
 editor: visual
+
+# 아래부터 문헌 관련 전역 설정
+bibliography: references.bib
+csl: nuclear-medicine-and-molecular-imaging.csl
+
 
